@@ -17,7 +17,7 @@ namespace WebBrowser
             InitializeComponent();
         }
         /// <summary>
-        /// This function is acalled when the exit menu item is seelcted
+        /// This function is called when the exit menu item is selected
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -44,6 +44,7 @@ namespace WebBrowser
         {
 
         }
+
         /// <summary>
         /// On click of this button webBrowser object will navigate to provided url in textBox
         /// </summary>
@@ -58,6 +59,7 @@ namespace WebBrowser
         {
             button1.Enabled = true;
             textBox1.Enabled = true;
+            //Todo This shows prior to full completion (see youtube.com)
             toolStripStatusLabel2.Text = "Navigation Complete";
         }
 
@@ -74,6 +76,7 @@ namespace WebBrowser
                 NavigateToPage();
             }
         }
+
         /// <summary>
         /// Re-usable navigation function
         /// </summary>
@@ -82,7 +85,14 @@ namespace WebBrowser
             toolStripStatusLabel2.Text = "Navigation Start";
             button1.Enabled = false;
             textBox1.Enabled = false;
-            webBrowser1.Navigate(textBox1.Text);
+            if (!(textBox1.Text.Contains(".com")))
+            {
+                webBrowser1.Navigate(textBox1.Text + ".com");
+            }
+            else
+            {
+                webBrowser1.Navigate(textBox1.Text);
+            }
         }
 
         private void toolStripStatusLabel1_Click_1(object sender, EventArgs e)
@@ -94,9 +104,9 @@ namespace WebBrowser
         {
             if (e.CurrentProgress > 0 && e.MaximumProgress > 0)
             {
-                toolStripProgressBar1.ProgressBar.Value = (int)(e.CurrentProgress * 100 / e.MaximumProgress);
+                toolStripProgressBar1.ProgressBar.Value = (int)((e.CurrentProgress / e.MaximumProgress) * 100);
+                //toolStripStatusLabel2.Text = toolStripProgressBar1.ProgressBar.Value.ToString() + "% Completed";
             }
-            toolStripProgressBar1.ProgressBar.Value = 0;
         }
 
         private void toolStripStatusLabel2_Click(object sender, EventArgs e)
