@@ -40,11 +40,6 @@ namespace WebBrowser
 
         }
 
-        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         /// <summary>
         /// On click of this button webBrowser object will navigate to provided url in textBox
         /// </summary>
@@ -52,7 +47,7 @@ namespace WebBrowser
         /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
-            NavigateToPage();
+            NavigateToPage(textBox1.Text);
         }
 
         private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
@@ -73,26 +68,41 @@ namespace WebBrowser
             //If Enter key is pressed
             if(e.KeyChar == (char)ConsoleKey.Enter)
             {
-                NavigateToPage();
+                NavigateToPage(textBox1.Text);
             }
         }
 
         /// <summary>
         /// Re-usable navigation function
         /// </summary>
-        private void NavigateToPage()
+        private void NavigateToPage(string address)
         {
+            if (String.IsNullOrEmpty(address)) return;
+            if ((!address.StartsWith("https://")) && (!address.StartsWith("https://")))
+            {
+                address = "http://" + address;
+            }
+            if (!address.EndsWith("com"))
+            {
+                address = address + ".com";
+            }
+
+            try
+            { 
+                //Use uri object for exception
+                webBrowser1.Navigate(new Uri(address));
+            }
+            catch (System.UriFormatException)
+            {
+                return;
+            }
+
             toolStripStatusLabel2.Text = "Navigation Start";
             button1.Enabled = false;
             textBox1.Enabled = false;
-            if (!(textBox1.Text.Contains(".com")))
-            {
-                webBrowser1.Navigate(textBox1.Text + ".com");
-            }
-            else
-            {
-                webBrowser1.Navigate(textBox1.Text);
-            }
+
+            //Display full url
+           textBox1.Text = address;
         }
 
         private void toolStripStatusLabel1_Click_1(object sender, EventArgs e)
@@ -110,11 +120,6 @@ namespace WebBrowser
         }
 
         private void toolStripStatusLabel2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void toolStripProgressBar1_Click(object sender, EventArgs e)
         {
 
         }
